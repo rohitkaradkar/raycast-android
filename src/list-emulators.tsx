@@ -82,7 +82,7 @@ export default function Command() {
 
 function openEmultror(emulator: string): void {
   runCommand(
-    `${emulatorPath()} @${emulator}`,
+    `${emulatorPath()} -no-audio -no-snapshot-save -no-snapshot-load @${emulator}`,
     (data) => {
       popToRoot;
     },

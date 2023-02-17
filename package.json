@@ -5,6 +5,9 @@
   "description": "Useful Android commands to list projects and emulators",
   "icon": "command-icon.png",
   "author": "mibrahimdev",
+  "contributors": [
+    "rohitkaradkar"
+  ],
   "categories": [
     "Developer Tools"
   ],
@@ -27,6 +30,25 @@
       "mode": "view"
     }
   ],
+  "preferences": [
+    {
+      "default": "",
+      "description": "Locate your Android Projects",
+      "name": "androidProjectsDirectory",
+      "placeholder": "/Users/{user-name}/AndroidStudioProjects",
+      "required": true,
+      "title": "Android Projects Directory",
+      "type": "textfield"
+    },
+    {
+      "default": "~/Library/Android/sdk",
+      "description": "Locate Android SDK path",
+      "name": "androidSDK",
+      "required": true,
+      "title": "Android SDK",
+      "type": "textfield"
+    }
+  ],
   "dependencies": {
     "@raycast/api": "^1.39.0",
     "expand-tilde": "^2.0.2"
@@ -40,25 +62,6 @@
     "prettier": "^2.5.1",
     "typescript": "^4.4.3"
   },
-  "preferences": [
-    {
-      "title": "Android Projects Directory",
-      "name": "androidProjectsDirectory",
-      "description": "Locate your Android Projects",
-      "placeholder": "/Users/{user-name}/AndroidStudioProjects",
-      "type": "textfield",
-      "required": true,
-      "default": ""
-    },
-    {
-      "title": "Android SDK",
-      "name": "androidSDK",
-      "description": "Locate Android SDK path",
-      "type": "textfield",
-      "required": true,
-      "default": "~/Library/Android/sdk"
-    }
-  ],
   "scripts": {
     "build": "ray build -e dist",
     "dev": "ray develop",
