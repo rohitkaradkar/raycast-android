@@ -58,7 +58,7 @@
     }
   ],
   "dependencies": {
-    "@raycast/api": "^1.39.0",
+    "@raycast/api": "^1.47.0",
     "expand-tilde": "^2.0.2"
   },
   "devDependencies": {
