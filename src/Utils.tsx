@@ -17,6 +17,11 @@ export function emulatorPath(): string {
   return `${androidSDK()}/emulator/emulator`;
 }
 
+
+export function adbPath(): string {
+  return `${androidSDK()}/platform-tools/adb`;
+}
+
 export function androidSDK() {
   const expandTilde = require("expand-tilde");
   const sdk = getPreferenceValues().androidSDK;
