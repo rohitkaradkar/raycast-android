@@ -72,8 +72,8 @@ export default function Command() {
           actions={
             <ActionPanel>
               <Action
-                title="Open Emulator"
-                onAction={() => openEmultror(emulator)}
+                title="Save Screenshot"
+                onAction={() => copyScreenshot(emulator)}
               />
             </ActionPanel>
           }
@@ -83,22 +83,18 @@ export default function Command() {
   );
 }
 
-function openEmultror(emulator: string): void {
+function copyScreenshot(emulatorId: string): void {
+  const command =`
+    set -e
+    name="Screenshot_$(date "+%d:%b:%y_%H:%M:%S")"
+    file="/tmp/$name.png"
+    ${adbPath()} -s ${emulatorId} exec-out screencap -p > $file
+    echo $file
+  `; 
   runCommand(
-    `${emulatorPath()} -no-audio -no-snapshot-save -no-snapshot-load @${emulator}`,
+    command,
     (data) => {
-      popToRoot;
-    },
-    (error) => {
-      showToast(Toast.Style.Failure, error);
-    }
-  );
-}
-
-function takeScreenshot(emulatorId: string): void {
-  runCommand(
-    `${adbPath()} -s ${emulatorId} exec-out screencap -p > /tmp/raycast-screenshot-${emulatorId}.png`,
-    (data) => {
+      showToast(Toast.Style.Success, data);
       popToRoot;
     },
     (error) => {
