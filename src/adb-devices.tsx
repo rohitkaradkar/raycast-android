@@ -74,7 +74,7 @@ export default function Command() {
             <ActionPanel>
               <Action
                 title="Save Screenshot"
-                onAction={() => copyScreenshot(emulator)}
+                onAction={() => saveScreenshot(emulator)}
               />
             </ActionPanel>
           }
@@ -84,11 +84,12 @@ export default function Command() {
   );
 }
 
-async function copyScreenshot(emulatorId: string) {
+async function saveScreenshot(emulatorId: string) {
+  const expandTilde = require("expand-tilde");
   const command =`
     set -e
     name="Screenshot_$(date "+%d:%b:%y_%H:%M:%S")"
-    file="/tmp/$name.png"
+    file="${expandTilde("~")}/Desktop/$name.png"
     ${adbPath()} -s ${emulatorId} exec-out screencap -p > $file
     echo $file
   `; 
