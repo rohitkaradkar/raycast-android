@@ -15,6 +15,7 @@ import {
   isAndroidStudioInstalled,
   isValidDirectory,
   runCommand,
+  runCommandAsync,
 } from "./Utils";
 
 export default function Command() {
@@ -83,7 +84,7 @@ export default function Command() {
   );
 }
 
-function copyScreenshot(emulatorId: string): void {
+async function copyScreenshot(emulatorId: string) {
   const command =`
     set -e
     name="Screenshot_$(date "+%d:%b:%y_%H:%M:%S")"
@@ -91,14 +92,14 @@ function copyScreenshot(emulatorId: string): void {
     ${adbPath()} -s ${emulatorId} exec-out screencap -p > $file
     echo $file
   `; 
-  runCommand(
-    command,
-    (data) => {
-      showToast(Toast.Style.Success, data);
+  await runCommandAsync(command)
+    .then((value) => {
+      showToast(Toast.Style.Success, value);
+    })
+    .catch((err) => {
+      showToast(Toast.Style.Failure, err);
+    })
+    .finally(() => {
       popToRoot;
-    },
-    (error) => {
-      showToast(Toast.Style.Failure, error);
-    }
-  );
+    });
 }
