@@ -6,6 +6,7 @@ import {
   popToRoot,
   showToast,
   Toast,
+  Clipboard
 } from "@raycast/api";
 import { useEffect, useState } from "react";
 import {
@@ -73,8 +74,8 @@ export default function Command() {
           actions={
             <ActionPanel>
               <Action
-                title="Save Screenshot"
-                onAction={() => saveScreenshot(emulator, setLoading)}
+                title="Copy Screenshot"
+                onAction={() => saveScreenshot(emulator)}
               />
             </ActionPanel>
           }
@@ -84,26 +85,31 @@ export default function Command() {
   );
 }
 
-async function saveScreenshot(emulatorId: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+async function saveScreenshot(emulatorId: string) {
   const expandTilde = require("expand-tilde");
   const command =`
     set -e
     name="Screenshot_$(date "+%d%b%y_%H%M%S").png"
-    file="${expandTilde("~")}/Desktop/$name.png"
+    file="${expandTilde("~")}/Desktop/$name"
     ${adbPath()} -s ${emulatorId} exec-out screencap -p > $file
-    echo $name
+    echo $file
   `;
   
-  setLoading(true)
+  showToast(Toast.Style.Animated, "Taking a screenshot");
   await runCommandAsync(command)
-    .then((value) => {
-      showToast(Toast.Style.Success, value);
+    .then((filePath) => {
+      copyScreenshot(filePath.trim())
+      showToast(Toast.Style.Success, "Copied to clipboard");
     })
     .catch((err) => {
       showToast(Toast.Style.Failure, err);
     })
     .finally(() => {
-      setLoading(false)
       popToRoot;
     });
+}
+
+async function copyScreenshot(filePath:string){
+  const content: Clipboard.Content = { "file": filePath }
+  await Clipboard.copy(content)
 }
