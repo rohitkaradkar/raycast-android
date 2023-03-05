@@ -17,6 +17,11 @@ export function emulatorPath(): string {
   return `${androidSDK()}/emulator/emulator`;
 }
 
+
+export function adbPath(): string {
+  return `${androidSDK()}/platform-tools/adb`;
+}
+
 export function androidSDK() {
   const expandTilde = require("expand-tilde");
   const sdk = getPreferenceValues().androidSDK;
@@ -58,5 +63,20 @@ export function runCommand(
   childProcess.stderr.on("data", function (data: string) {
     console.log("stderr: " + data);
     error(data.toString());
+  });
+}
+
+export async function runCommandAsync(cmd: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const childProcess = spawn(cmd, [], { shell: true });
+    childProcess.stdout.on("data", function (data: string) {
+      resolve(data.toString());
+      console.log("stdout: " + data);
+    });
+  
+    childProcess.stderr.on("data", function (data: string) {
+      console.log("stderr: " + data);
+      reject(data.toString());
+    });
   });
 }
