@@ -74,7 +74,7 @@ export default function Command() {
             <ActionPanel>
               <Action
                 title="Save Screenshot"
-                onAction={() => saveScreenshot(emulator)}
+                onAction={() => saveScreenshot(emulator, setLoading)}
               />
             </ActionPanel>
           }
@@ -84,15 +84,17 @@ export default function Command() {
   );
 }
 
-async function saveScreenshot(emulatorId: string) {
+async function saveScreenshot(emulatorId: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
   const expandTilde = require("expand-tilde");
   const command =`
     set -e
-    name="Screenshot_$(date "+%d:%b:%y_%H:%M:%S")"
+    name="Screenshot_$(date "+%d%b%y_%H%M%S").png"
     file="${expandTilde("~")}/Desktop/$name.png"
     ${adbPath()} -s ${emulatorId} exec-out screencap -p > $file
-    echo $file
-  `; 
+    echo $name
+  `;
+  
+  setLoading(true)
   await runCommandAsync(command)
     .then((value) => {
       showToast(Toast.Style.Success, value);
@@ -101,6 +103,7 @@ async function saveScreenshot(emulatorId: string) {
       showToast(Toast.Style.Failure, err);
     })
     .finally(() => {
+      setLoading(false)
       popToRoot;
     });
 }
