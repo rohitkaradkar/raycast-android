@@ -12,12 +12,12 @@ import { useEffect, useState } from "react";
 import {
   adbPath,
   androidSDK,
-  emulatorPath,
   isAndroidStudioInstalled,
   isValidDirectory,
   runCommand,
   runCommandAsync,
 } from "./Utils";
+import { tmpdir } from "os";
 
 export default function Command() {
   const [items, setItems] = useState<string[]>(() => []);
@@ -86,11 +86,10 @@ export default function Command() {
 }
 
 async function saveScreenshot(emulatorId: string) {
-  const expandTilde = require("expand-tilde");
   const command =`
     set -e
     name="Screenshot_$(date "+%d%b%y_%H%M%S").png"
-    file="${expandTilde("~")}/Desktop/$name"
+    file="${tmpdir()}/$name"
     ${adbPath()} -s ${emulatorId} exec-out screencap -p > $file
     echo $file
   `;
