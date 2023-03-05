@@ -3,7 +3,7 @@ import {
   ActionPanel,
   Icon,
   List,
-  popToRoot,
+  closeMainWindow,
   showToast,
   Toast,
   Clipboard
@@ -94,21 +94,21 @@ async function saveScreenshot(emulatorId: string) {
     echo $file
   `;
   
-  showToast(Toast.Style.Animated, "Taking a screenshot");
+  showToast(Toast.Style.Animated, "Copying the screenshot");
   await runCommandAsync(command)
     .then((filePath) => {
       copyScreenshot(filePath.trim())
-      showToast(Toast.Style.Success, "Copied to clipboard");
+      showToast(Toast.Style.Success, "Done");
     })
     .catch((err) => {
       showToast(Toast.Style.Failure, err);
     })
     .finally(() => {
-      popToRoot;
+      closeMainWindow();
     });
 }
 
-async function copyScreenshot(filePath:string){
+async function copyScreenshot(filePath: string){
   const content: Clipboard.Content = { "file": filePath }
   await Clipboard.copy(content)
 }
